@@ -1,6 +1,7 @@
 import React from 'react';
-import { Card, CardImg, CardBody, CardText, CardTitle } from 'reactstrap';
+import { Card, CardImg, CardBody, CardText, CardTitle, Breadcrumb, BreadcrumbItem } from 'reactstrap';
 import {Date} from 'prismic-reactjs';
+import {Link} from 'react-router-dom';
 
 
 function RenderComments({comments}){
@@ -31,10 +32,20 @@ function RenderComments({comments}){
         );
     }
 }
-function RenderDish({dish}) {
+function RenderDish({dish, comments}) {
     if (dish != null)
         return(
             <div className="container">
+                <div className="row">
+                    <Breadcrumb>
+                        <BreadcrumbItem><Link to="/menu">Menu</Link></BreadcrumbItem>
+                        <BreadcrumbItem active>{dish.name}</BreadcrumbItem>
+                    </Breadcrumb>
+                    <div className="col-12">
+                        <h3>{dish.name}</h3>
+                        <hr />
+                    </div>                
+                </div>
                 <div className="row">
                     <div  className="col-12 col-md-5 m-1">
                         <Card>
@@ -45,7 +56,7 @@ function RenderDish({dish}) {
                             </CardBody>
                         </Card>
                     </div>
-                    <RenderComments comments={dish.comments} />
+                    <RenderComments comments={comments} />
                 </div>
             </div>
         );
@@ -57,7 +68,10 @@ function RenderDish({dish}) {
 
 const DishDetail = (props) => {
     return(
-        <RenderDish dish={props.dish} />
+        <RenderDish 
+            dish={props.dish} 
+            comments={props.comments}
+        />
     );
 }
 
