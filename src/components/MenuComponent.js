@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 //functional component--->
 ////when we are just rendering the props instead of storing the states, we required the function component 
-function RenderMenuItem({dish, onClick}){
+function RenderMenuItem({dish}){
     return(
         <Card>
             <Link to={`/menu/${dish.id}`} >
