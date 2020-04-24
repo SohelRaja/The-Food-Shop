@@ -4,6 +4,7 @@ import { Card, CardImg, CardBody, CardText, CardTitle, Breadcrumb, BreadcrumbIte
 import {Date} from 'prismic-reactjs';
 import {Link} from 'react-router-dom';
 import { Control, LocalForm, Errors } from 'react-redux-form';
+import { Loading } from './LoadingComponent';
 
 const required = (val) => val && val.length;
 const maxLength = (len) => (val) => !(val) || (val.length <= len);
@@ -146,8 +147,25 @@ function RenderComments({comments, addComment, dishId}){
         );
     }
 }
-function RenderDish({dish, comments, addComment}) {
-    if (dish != null)
+function RenderDish({dish,isLoading, errMess, comments, addComment}) {
+    if(isLoading){
+        return(
+            <div className="container">
+                <div className="row">
+                    < Loading /> 
+                </div>
+            </div>
+        );
+    }else if (errMess) {
+        return(
+            <div className="container">
+                <div className="row">            
+                    <h4>{errMess}</h4>
+                </div>
+            </div>
+        );
+    }
+    else if (dish != null)
         return(
             <div className="container">
                 <div className="row">
@@ -178,16 +196,19 @@ function RenderDish({dish, comments, addComment}) {
                 </div>
             </div>
         );
-    else
+    else{
         return(
             <div></div>
         );
+    }
 }
 
 const DishDetail = (props) => {
     return(
         <RenderDish 
             dish={props.dish} 
+            isLoading={props.isLoading}
+            errMess={props.errMess} 
             comments={props.comments}
             addComment={props.addComment}
         />
