@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Card, CardImg, CardBody, CardText, CardTitle, Breadcrumb, BreadcrumbItem, 
     Button, Label, Modal, ModalBody, ModalHeader, Row, Col } from 'reactstrap';
-import {Date} from 'prismic-reactjs';
 import {Link} from 'react-router-dom';
 import { Control, LocalForm, Errors } from 'react-redux-form';
 import { Loading } from './LoadingComponent';
@@ -29,7 +28,7 @@ class CommentForm extends Component{
     }
     handleSubmit(values) {
         this.toggleModal();
-        this.props.addComment(this.props.dishId, values.rating, values.author, values.comment);
+        this.props.postComment(this.props.dishId, values.rating, values.author, values.comment);
     }
     render(){
         return(
@@ -116,15 +115,16 @@ class CommentForm extends Component{
     }
 }
 
-function RenderComments({comments, addComment, dishId}){
+function RenderComments({comments, postComment, dishId}){
     if(comments != null){
         const comment = comments.map((comment)=>{
-            const date = Date(comment.date);
+            const date = comment.date;
+            const stringDate = new Date(date);
             const formattedDate = Intl.DateTimeFormat('en-US',{
                 year: 'numeric',
                 month: 'short',
                 day: '2-digit' 
-            }).format(date);
+            }).format(stringDate);
             return(
                 <div key={comment.id}>
                     <p>{comment.comment}</p>
@@ -138,7 +138,7 @@ function RenderComments({comments, addComment, dishId}){
                 {comment}
                 <CommentForm 
                     dishId={dishId}
-                    addComment={addComment}
+                    postComment={postComment}
                 />
             </div>
         );
@@ -148,7 +148,7 @@ function RenderComments({comments, addComment, dishId}){
         );
     }
 }
-function RenderDish({dish,isLoading, errMess, comments, addComment}) {
+function RenderDish({dish,isLoading, errMess, comments, postComment}) {
     if(isLoading){
         return(
             <div className="container">
@@ -191,7 +191,7 @@ function RenderDish({dish,isLoading, errMess, comments, addComment}) {
                     </div>
                     <RenderComments 
                         comments={comments} 
-                        addComment={addComment}
+                        postComment={postComment}
                         dishId={dish.id}
                     />
                 </div>
@@ -211,7 +211,7 @@ const DishDetail = (props) => {
             isLoading={props.isLoading}
             errMess={props.errMess} 
             comments={props.comments}
-            addComment={props.addComment}
+            postComment={props.postComment}
         />
     );
 }
