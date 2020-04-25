@@ -3,6 +3,8 @@ import { Card, CardImg, CardBody, CardText, CardTitle, Breadcrumb, BreadcrumbIte
     Button, Label, Modal, ModalBody, ModalHeader, Row, Col } from 'reactstrap';
 import {Link} from 'react-router-dom';
 import { Control, LocalForm, Errors } from 'react-redux-form';
+import { FadeTransform, Fade, Stagger } from 'react-animation-components';
+
 import { Loading } from './LoadingComponent';
 import { baseUrl } from '../shared/baseUrl';
 
@@ -126,20 +128,24 @@ function RenderComments({comments, postComment, dishId}){
                 day: '2-digit' 
             }).format(stringDate);
             return(
-                <div key={comment.id}>
-                    <p>{comment.comment}</p>
-                    <p>-- {comment.author}, {formattedDate}</p>
-                </div>
+                <Fade in>
+                    <div key={comment.id}>
+                        <p>{comment.comment}</p>
+                        <p>-- {comment.author}, {formattedDate}</p>
+                    </div>
+                </Fade>
             );
         });
         return(
             <div  className="col-12 col-md-5 m-1">
                 <h4>Comments</h4>
-                {comment}
-                <CommentForm 
-                    dishId={dishId}
-                    postComment={postComment}
-                />
+                <Stagger in>
+                    {comment}
+                    <CommentForm 
+                        dishId={dishId}
+                        postComment={postComment}
+                    />
+                </Stagger>
             </div>
         );
     }else{
@@ -181,13 +187,19 @@ function RenderDish({dish,isLoading, errMess, comments, postComment}) {
                 </div>
                 <div className="row">
                     <div  className="col-12 col-md-5 m-1">
-                        <Card>
-                            <CardImg top src={baseUrl + dish.image} alt={dish.name} />
-                            <CardBody>
-                            <CardTitle>{dish.name}</CardTitle>
-                            <CardText>{dish.description}</CardText>
-                            </CardBody>
-                        </Card>
+                        <FadeTransform
+                            in
+                            transformProps={{
+                                exitTransform: 'scale(0.5) translateY(-50%)'
+                            }}>
+                            <Card>
+                                <CardImg top src={baseUrl + dish.image} alt={dish.name} />
+                                <CardBody>
+                                <CardTitle>{dish.name}</CardTitle>
+                                <CardText>{dish.description}</CardText>
+                                </CardBody>
+                            </Card>
+                        </FadeTransform>
                     </div>
                     <RenderComments 
                         comments={comments} 
